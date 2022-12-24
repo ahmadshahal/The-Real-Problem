@@ -8,48 +8,51 @@ import java.util.HashMap;
 import java.util.PriorityQueue;
 
 public class LogicDataSource {
-    // G , H , ref to player object
-    private HashMap<Integer , Triple<Double , Double , Player>> visited = new HashMap<Integer, Triple<Double, Double, Player>>();
+
+    private final Comparator<Triple<Double, Double, Player>> sortByCostThenHeuristic = (t1, t2) -> {
+        double totalCost1 = t1.getFirst() + t1.getSecond();
+        double totalCost2 = t2.getFirst() + t2.getSecond();
+        if (totalCost1 < totalCost2) return -1;
+        else if (totalCost1 > totalCost2) return 1;
+        else return t1.getSecond().compareTo(t2.getSecond());
+    };
 
     public void aStar(Player player) {
-        Comparator<Triple<Double , Double , Player>> sortByCostThenHeuristic = new Comparator<Triple<Double, Double, Player>>() {
-            @Override
-            public int compare(Triple<Double, Double, Player> t1, Triple<Double, Double, Player> t2) {
-                double totalCost1 = t1.getFirst() + t1.getSecond();
-                double totalCost2 = t2.getFirst() + t2.getSecond();
-                if(totalCost1 < totalCost2) return -1;
-                else if(totalCost1 > totalCost2) return 1;
-                else {
-                    if (t1.getSecond() <= t1.getSecond()) return -1;
-                    else return 1;
+
+        // Key: Player's HashCode.
+        // Value: First: G, Second: H, Third: Player.
+        final HashMap<Integer, Triple<Double, Double, Player>> visited = new HashMap<>();
+        PriorityQueue<Triple<Double, Double, Player>> queue = new PriorityQueue<>(sortByCostThenHeuristic);
+
+        Triple<Double, Double, Player> initial = new Triple<>(0.0, this.calcHeuristic(player), player);
+        queue.add(initial);
+        visited.put(player.hashCode(), initial);
+
+        while (!queue.isEmpty()) {
+            Triple<Double, Double, Player> current = queue.poll();
+            if (current.getThird().getStation().isFinal()) {
+                // TODO: Print Results.
+                return;
+            }
+
+            ArrayList<Player> children = current.getThird().getNextStates();
+            for (Player child : children) {
+                Triple<Double, Double, Player> newValue = new Triple<>(child.getTime(), calcHeuristic(child), child);
+                if (visited.containsKey(child.hashCode())) {
+                    double previousPossibleCost = visited.get(child.hashCode()).getFirst();
+                    if (child.getTime() < previousPossibleCost) {
+                        visited.put(child.hashCode(), newValue);
+                        queue.add(newValue);
+                    }
+                } else {
+                    visited.put(child.hashCode(), newValue);
+                    queue.add(newValue);
                 }
             }
-        };
-        // first is G , second is H , third is Player node
-        PriorityQueue<Triple<Double , Double , Player>> pq = new PriorityQueue<Triple<Double , Double , Player>>(10 , sortByCostThenHeuristic);
-        pq.add(new Triple<>(0.0 , this.calcHeuristic(player) , player));
-        this.visited.put(player.hashCode() , new Triple<>(0.0 , this.calcHeuristic(player) , player));
-        while(!pq.isEmpty()){
-             Triple<Double , Double , Player> cur = pq.poll();
-             if(cur.getThird().getStation().isFinal()) return;
-             ArrayList<Player> children = cur.getThird().getNextStates();
-             for (Player child : children) {
-                 if(this.visited.containsKey(child.hashCode())){
-                    if(this.visited.get(child.hashCode()).getFirst() > child.getTime()){
-                        this.visited.put(child.hashCode() , new Triple<>(child.getTime() , this.calcHeuristic(child) , child));
-                        pq.add(new Triple<>(child.getTime() , this.calcHeuristic(child) , child));
-                    }
-                 }
-                 else{
-                     this.visited.put(child.hashCode() , new Triple<>(child.getTime() , this.calcHeuristic(child) , child));
-                     pq.add(new Triple<>(child.getTime() , this.calcHeuristic(child) , child));
-                 }
-             }
         }
     }
 
-    private double calcHeuristic(Player player){
-
+    private double calcHeuristic(Player player) {
         return 0;
     }
 }
