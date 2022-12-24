@@ -21,9 +21,13 @@ public class Player {
         this.time = time;
     }
 
-    public Station getStation() { return this.station; }
+    public Station getStation() {
+        return this.station;
+    }
 
-    public double getTime() { return this.time; }
+    public double getTime() {
+        return this.time;
+    }
 
     public ArrayList<Player> getNextStates() {
         ArrayList<Player> players = new ArrayList<>();
