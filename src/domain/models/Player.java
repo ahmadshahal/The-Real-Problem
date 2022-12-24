@@ -46,24 +46,18 @@ public class Player {
             if (road.getTaxi() != null) {
                 Player player = this.copy();
                 player.takeTaxi(road);
-                if (player.money >= 0 && player.health >= 0) {
-                    players.add(player);
-                }
+                players.add(player);
             }
             if (road.getBuses() != null && road.getBuses().length != 0) {
                 for (Bus bus : road.getBuses()) {
                     Player player = this.copy();
                     player.takeBus(road, bus);
-                    if (player.money >= 0 && player.health >= 0) {
-                        players.add(player);
-                    }
+                    players.add(player);
                 }
             }
             Player player = this.copy();
             player.walk(road);
-            if (player.money >= 0 && player.health >= 0) {
-                players.add(player);
-            }
+            players.add(player);
         }
         return players;
     }
