@@ -25,40 +25,42 @@ public class Player {
         for (Road road : this.station.getRoads()) {
             if(road.getTaxi() != null) {
                 Player player = this.copy();
-                player.takeTaxi(road.getDistance(), road.getTaxi(), road.getDestination());
+                player.takeTaxi(road);
                 players.add(player);
             }
             if(road.getBus() != null) {
                 Player player = this.copy();
-                player.takeBus(road.getDistance(), road.getBus(), road.getDestination());
+                player.takeBus(road);
                 players.add(player);
             }
             Player player = this.copy();
-            player.walk(road.getDistance(), road.getDestination());
+            player.walk(road);
             players.add(player);
         }
         return (Player[]) players.toArray();
     }
 
-    public void walk(int distance, Station destination) {
-        health -= 10 * distance;
-        time += distance / 5.5;
+    public void walk(Road road) {
+        health -= 10 * road.getDistance();
+        time += road.getDistance() / 5.5;
         cost += 0;
-        station = destination;
+        station = road.getDestination();
     }
 
-    public void takeTaxi(int distance, Taxi taxi, Station destination) {
-        cost += taxi.getMoneyCost(distance);
-        health += taxi.getEffortCost(distance);
-        time += taxi.getTimeCost(distance);
-        station = destination;
+    public void takeTaxi(Road road) {
+        cost += road.getTaxi().getMoneyCost(road.getDistance());
+        health += road.getTaxi().getEffortCost(road.getDistance());
+        time += road.getTaxi().getTimeCost(road.getDistance());
+        time += station.getTaxiWaitingTime();
+        station = road.getDestination();
     }
 
-    public void takeBus(int distance, Bus bus, Station destination) {
-        cost += bus.getMoneyCost();
-        health += bus.getEffortCost(distance);
-        time += bus.getTimeCost(distance);
-        station = destination;
+    public void takeBus(Road road) {
+        cost += road.getBus().getMoneyCost();
+        health += road.getBus().getEffortCost(road.getDistance());
+        time += road.getBus().getTimeCost(road.getDistance());
+        time += station.getBusWaitingTime();
+        station = road.getDestination();
     }
 
     @Override
