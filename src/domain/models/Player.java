@@ -20,29 +20,24 @@ public class Player {
         this.time = time;
     }
 
-    /*
     public Player[] getNextStates() {
-        ArrayList<Player> players = new ArrayList<Player>();
+        ArrayList<Player> players = new ArrayList<>();
         for (Road road : this.station.getRoads()) {
-
+            if(road.getTaxi() != null) {
+                Player player = this.copy();
+                player.takeTaxi(road.getDistance(), road.getTaxi(), road.getDestination());
+                players.add(player);
+            }
+            if(road.getBus() != null) {
+                Player player = this.copy();
+                player.takeBus(road.getDistance(), road.getBus(), road.getDestination());
+                players.add(player);
+            }
+            Player player = this.copy();
+            player.walk(road.getDistance(), road.getDestination());
+            players.add(player);
         }
         return (Player[]) players.toArray();
-    }
-     */
-
-    public void move(int health, int cost, int time, Station station) {
-        this.health = health;
-        this.cost = cost;
-        this.time = time;
-        this.station = station;
-    }
-
-    public Station getStation() {
-        return station;
-    }
-
-    public void setStation(Station station) {
-        this.station = station;
     }
 
     public void walk(int distance, Station destination) {
