@@ -7,6 +7,7 @@ public class Player {
     private int health = 100;
     private int money = 10000;
     private double time = 0;
+    private int cost = 0;
     private Station station;
     private Bus previousBus = null;
 
@@ -14,11 +15,13 @@ public class Player {
         this.station = station;
     }
 
-    private Player(Station station, int health, int money, double time) {
+    private Player(Station station, int health, int money, double time, int cost, Bus previousBus) {
         this.station = station;
         this.health = health;
         this.money = money;
         this.time = time;
+        this.cost = cost;
+        this.previousBus = previousBus;
     }
 
     public Station getStation() {
@@ -27,6 +30,14 @@ public class Player {
 
     public double getTime() {
         return this.time;
+    }
+
+    public int getCost() {
+        return this.cost;
+    }
+
+    public int getMoney() {
+        return this.money;
     }
 
     public ArrayList<Player> getNextStates() {
@@ -61,13 +72,13 @@ public class Player {
         previousBus = null;
         health -= 10 * road.getDistance();
         time += road.getDistance() / 5.5;
-        money -= 0;
+        cost += 0;
         station = road.getDestination();
     }
 
     public void takeTaxi(Road road) {
         previousBus = null;
-        money -= road.getTaxi().getMoneyCost(road.getDistance());
+        cost += road.getTaxi().getMoneyCost(road.getDistance());
         health += road.getTaxi().getEffortCost(road.getDistance());
         time += road.getTaxi().getTimeCost(road.getDistance());
         time += station.getTaxiWaitingTime();
@@ -76,7 +87,7 @@ public class Player {
 
     public void takeBus(Road road, Bus bus) {
         if (previousBus == null || !previousBus.getName().equals(bus.getName())) {
-            money -= bus.getMoneyCost();
+            cost += bus.getMoneyCost();
         }
         previousBus = bus;
         health += bus.getEffortCost(road.getDistance());
@@ -90,12 +101,12 @@ public class Player {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return health == player.health && money == player.money && Double.compare(player.time, time) == 0 && station.equals(player.station) && Objects.equals(previousBus, player.previousBus);
+        return health == player.health && money == player.money && Double.compare(player.time, time) == 0 && cost == player.cost && station.equals(player.station) && Objects.equals(previousBus, player.previousBus);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(health, money, time, station, previousBus);
+        return Objects.hash(health, money, time, cost, station, previousBus);
     }
 
     public Player copy() {
@@ -103,7 +114,9 @@ public class Player {
                 this.station,
                 this.health,
                 this.money,
-                this.time
+                this.time,
+                this.cost,
+                this.previousBus
         );
     }
 }
