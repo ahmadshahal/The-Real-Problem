@@ -1,5 +1,6 @@
 package domain.models;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Player {
@@ -17,6 +18,23 @@ public class Player {
         this.health = health;
         this.cost = cost;
         this.time = time;
+    }
+
+    /*
+    public Player[] getNextStates() {
+        ArrayList<Player> players = new ArrayList<Player>();
+        for (Road road : this.station.getRoads()) {
+
+        }
+        return (Player[]) players.toArray();
+    }
+     */
+
+    public void move(int health, int cost, int time, Station station) {
+        this.health = health;
+        this.cost = cost;
+        this.time = time;
+        this.station = station;
     }
 
     public Station getStation() {
@@ -43,8 +61,8 @@ public class Player {
         this.cost = cost;
     }
 
-    public void walk() {
-        health -= 10;
+    public void walk(int distance) {
+        health -= 10 * distance;
     }
 
     public int getTime() {
