@@ -28,10 +28,12 @@ public class Player {
                 player.takeTaxi(road);
                 players.add(player);
             }
-            if(road.getBus() != null) {
-                Player player = this.copy();
-                player.takeBus(road);
-                players.add(player);
+            if(road.getBuses() != null && road.getBuses().length != 0) {
+                for (Bus bus : road.getBuses()) {
+                    Player player = this.copy();
+                    player.takeBus(road, bus);
+                    players.add(player);
+                }
             }
             Player player = this.copy();
             player.walk(road);
@@ -55,10 +57,10 @@ public class Player {
         station = road.getDestination();
     }
 
-    public void takeBus(Road road) {
-        cost += road.getBus().getMoneyCost();
-        health += road.getBus().getEffortCost(road.getDistance());
-        time += road.getBus().getTimeCost(road.getDistance());
+    public void takeBus(Road road, Bus bus) {
+        cost += bus.getMoneyCost();
+        health += bus.getEffortCost(road.getDistance());
+        time += bus.getTimeCost(road.getDistance());
         time += station.getBusWaitingTime();
         station = road.getDestination();
     }

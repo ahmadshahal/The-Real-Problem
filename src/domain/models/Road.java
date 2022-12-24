@@ -2,13 +2,13 @@ package domain.models;
 
 public class Road {
     private final int distance;
-    private final Bus bus; // Defaults to null.
+    private final Bus[] buses; // Defaults to null.
     private final Taxi taxi; // Defaults to null.
     private final Station destination;
 
-    public Road(int distance, Bus bus, Taxi taxi, Station destination) {
+    public Road(int distance, Bus[] buses, Taxi taxi, Station destination) {
         this.distance = distance;
-        this.bus = bus;
+        this.buses = buses;
         this.taxi = taxi;
         this.destination = destination;
     }
@@ -21,8 +21,8 @@ public class Road {
         return destination;
     }
 
-    public Bus getBus() {
-        return bus;
+    public Bus[] getBuses() {
+        return buses;
     }
 
     public Taxi getTaxi() {
