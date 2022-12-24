@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Player {
     private int health = 100;
-    private int cost = 0;
+    private int money = 10000;
     private double time = 0;
     private Station station;
     private Bus previousBus = null;
@@ -14,10 +14,10 @@ public class Player {
         this.station = station;
     }
 
-    private Player(Station station, int health, int cost, double time) {
+    private Player(Station station, int health, int money, double time) {
         this.station = station;
         this.health = health;
-        this.cost = cost;
+        this.money = money;
         this.time = time;
     }
 
@@ -31,18 +31,24 @@ public class Player {
             if(road.getTaxi() != null) {
                 Player player = this.copy();
                 player.takeTaxi(road);
-                players.add(player);
+                if(player.money >= 0 && player.health >= 0) {
+                    players.add(player);
+                }
             }
             if(road.getBuses() != null && road.getBuses().length != 0) {
                 for (Bus bus : road.getBuses()) {
                     Player player = this.copy();
                     player.takeBus(road, bus);
-                    players.add(player);
+                    if(player.money >= 0 && player.health >= 0) {
+                        players.add(player);
+                    }
                 }
             }
             Player player = this.copy();
             player.walk(road);
-            players.add(player);
+            if(player.money >= 0 && player.health >= 0) {
+                players.add(player);
+            }
         }
         return players;
     }
@@ -51,13 +57,13 @@ public class Player {
         previousBus = null;
         health -= 10 * road.getDistance();
         time += road.getDistance() / 5.5;
-        cost += 0;
+        money -= 0;
         station = road.getDestination();
     }
 
     public void takeTaxi(Road road) {
         previousBus = null;
-        cost += road.getTaxi().getMoneyCost(road.getDistance());
+        money -= road.getTaxi().getMoneyCost(road.getDistance());
         health += road.getTaxi().getEffortCost(road.getDistance());
         time += road.getTaxi().getTimeCost(road.getDistance());
         time += station.getTaxiWaitingTime();
@@ -66,7 +72,7 @@ public class Player {
 
     public void takeBus(Road road, Bus bus) {
         if(previousBus == null || !previousBus.getName().equals(bus.getName())) {
-            cost += bus.getMoneyCost();
+            money -= bus.getMoneyCost();
         }
         previousBus = bus;
         health += bus.getEffortCost(road.getDistance());
@@ -80,19 +86,19 @@ public class Player {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return health == player.health && cost == player.cost && time == player.time && Objects.equals(station, player.station);
+        return health == player.health && money == player.money && Double.compare(player.time, time) == 0 && station.equals(player.station) && Objects.equals(previousBus, player.previousBus);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(health, cost, time, station);
+        return Objects.hash(health, money, time, station, previousBus);
     }
 
     public Player copy() {
         return new Player(
                 this.station,
                 this.health,
-                this.cost,
+                this.money,
                 this.time
         );
     }

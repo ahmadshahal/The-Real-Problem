@@ -20,7 +20,7 @@ public class LogicDataSource {
     public void aStar(Player player) {
 
         // Key: Player's HashCode.
-        // Value: First: G, Second: H, Third: Player.
+        // Value: First: G (Time), Second: H, Third: Player.
         final HashMap<Integer, Triple<Double, Double, Player>> visited = new HashMap<>();
         PriorityQueue<Triple<Double, Double, Player>> queue = new PriorityQueue<>(sortByCostThenHeuristic);
 
@@ -34,7 +34,6 @@ public class LogicDataSource {
                 // TODO: Print Results.
                 return;
             }
-
             ArrayList<Player> children = current.getThird().getNextStates();
             for (Player child : children) {
                 Triple<Double, Double, Player> newValue = new Triple<>(child.getTime(), calcHeuristic(child), child);
