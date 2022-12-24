@@ -21,7 +21,11 @@ public class Player {
         this.time = time;
     }
 
-    public Player[] getNextStates() {
+    public Station getStation() { return this.station; }
+
+    public double getTime() { return  this.time; }
+
+    public ArrayList<Player> getNextStates() {
         ArrayList<Player> players = new ArrayList<>();
         for (Road road : this.station.getRoads()) {
             if(road.getTaxi() != null) {
@@ -40,7 +44,7 @@ public class Player {
             player.walk(road);
             players.add(player);
         }
-        return (Player[]) players.toArray();
+        return players;
     }
 
     public void walk(Road road) {
