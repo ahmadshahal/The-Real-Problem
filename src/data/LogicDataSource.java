@@ -30,7 +30,7 @@ public class LogicDataSource {
 
         while (!queue.isEmpty()) {
             Triple<Double, Double, Player> current = queue.poll();
-            if (visited.containsKey(current.hashCode())) {
+            if (visited.containsKey(current.getThird().hashCode())) {
                 double previousPossibleCost = visited.get(current.hashCode()).getFirst();
                 if (previousPossibleCost < current.getFirst()) continue;
             }
