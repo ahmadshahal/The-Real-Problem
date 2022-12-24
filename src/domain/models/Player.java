@@ -44,6 +44,7 @@ public class Player {
     }
 
     public void walk(Road road) {
+        previousBus = null;
         health -= 10 * road.getDistance();
         time += road.getDistance() / 5.5;
         cost += 0;
@@ -51,6 +52,7 @@ public class Player {
     }
 
     public void takeTaxi(Road road) {
+        previousBus = null;
         cost += road.getTaxi().getMoneyCost(road.getDistance());
         health += road.getTaxi().getEffortCost(road.getDistance());
         time += road.getTaxi().getTimeCost(road.getDistance());
