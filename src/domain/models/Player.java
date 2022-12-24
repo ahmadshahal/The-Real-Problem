@@ -1,5 +1,7 @@
 package domain.models;
 
+import java.util.Objects;
+
 public class Player {
     private int health = 100;
     private int cost = 0;
@@ -8,6 +10,13 @@ public class Player {
 
     public Player(Station station) {
         this.station = station;
+    }
+
+    private Player(Station station, int health, int cost, int time) {
+        this.station = station;
+        this.health = health;
+        this.cost = cost;
+        this.time = time;
     }
 
     public Station getStation() {
@@ -44,5 +53,27 @@ public class Player {
 
     public void setTime(int time) {
         this.time = time;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return health == player.health && cost == player.cost && time == player.time && Objects.equals(station, player.station);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(health, cost, time, station);
+    }
+
+    public Player copy() {
+        return new Player(
+                this.station,
+                this.health,
+                this.cost,
+                this.time
+        );
     }
 }
