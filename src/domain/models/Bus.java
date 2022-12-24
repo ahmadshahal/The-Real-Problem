@@ -2,9 +2,9 @@ package domain.models;
 
 public class Bus {
     private final String name;
-    private final int speed;
+    private final double speed;
 
-    public Bus(String name, int speed) {
+    public Bus(String name, double speed) {
         this.name = name;
         this.speed = speed;
     }
@@ -13,8 +13,8 @@ public class Bus {
         return name;
     }
 
-    public int getSpeed() {
-        return speed;
+    public double getTimeCost(int distance) {
+        return speed * distance;
     }
 
     public int getEffortCost(int distance) {

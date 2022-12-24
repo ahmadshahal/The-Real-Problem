@@ -6,14 +6,14 @@ import java.util.Objects;
 public class Player {
     private int health = 100;
     private int cost = 0;
-    private int time = 0;
+    private double time = 0;
     private Station station;
 
     public Player(Station station) {
         this.station = station;
     }
 
-    private Player(Station station, int health, int cost, int time) {
+    private Player(Station station, int health, int cost, double time) {
         this.station = station;
         this.health = health;
         this.cost = cost;
@@ -45,32 +45,25 @@ public class Player {
         this.station = station;
     }
 
-    public int getHealth() {
-        return health;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
-    public int getCost() {
-        return cost;
-    }
-
-    public void setCost(int cost) {
-        this.cost = cost;
-    }
-
-    public void walk(int distance) {
+    public void walk(int distance, Station destination) {
         health -= 10 * distance;
+        time += distance * 5.5;
+        cost += 0;
+        station = destination;
     }
 
-    public int getTime() {
-        return time;
+    public void takeTaxi(int distance, Taxi taxi, Station destination) {
+        cost += taxi.getMoneyCost(distance);
+        health += taxi.getEffortCost(distance);
+        time += taxi.getTimeCost(distance);
+        station = destination;
     }
 
-    public void setTime(int time) {
-        this.time = time;
+    public void takeBus(int distance, Bus bus, Station destination) {
+        cost += bus.getMoneyCost();
+        health += bus.getEffortCost(distance);
+        time += bus.getTimeCost(distance);
+        station = destination;
     }
 
     @Override

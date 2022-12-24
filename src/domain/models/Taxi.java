@@ -1,14 +1,14 @@
 package domain.models;
 
 public class Taxi {
-    private final int speed;
+    private final double speed;
 
-    public Taxi(int speed) {
+    public Taxi(double speed) {
         this.speed = speed;
     }
 
-    public int getSpeed() {
-        return speed;
+    public double getTimeCost(int distance) {
+        return speed * distance;
     }
 
     public int getEffortCost(int distance) {
