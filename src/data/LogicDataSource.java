@@ -1,13 +1,19 @@
 package data;
 
 import domain.models.Player;
+import domain.models.Road;
+import domain.models.Station;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
+
 public class LogicDataSource {
+
+    private final HashMap <Station,Double> Heuristic  = new HashMap<>();
 
     private final Comparator<Triple<Double, Double, Player>> sortByCostThenHeuristic = (t1, t2) -> {
         double totalCost1 = t1.getFirst() + t1.getSecond();
@@ -51,7 +57,31 @@ public class LogicDataSource {
         }
     }
 
-    private double calcHeuristic(Player player) {
-        return 0;
+
+
+    private void Dijkstra (Station station) {
+        // sort on the second value
+        PriorityQueue <Pair<Station,Double>> q = new PriorityQueue<>((a, b) -> Double.compare(a.getValue(),b.getValue()));
+        q.add(new Pair<Station,Double>(station,0.0));
+        Heuristic.put(station,0.0);
+        while(q.size() > 0) {
+            Pair <Station,Double> curStation = q.peek();
+            Double curDistance = Heuristic.get(curStation.getKey());
+            q.poll();
+            if(curDistance != null  &&  curDistance < curStation.getValue())   continue;
+            for (Road road : station.getRoads()) {
+                Double childStationDistance = Double.MAX_VALUE;
+                if(Heuristic.get(road.getDestination()) != null)    childStationDistance = Heuristic.get(road.getDestination());
+                if(childStationDistance > curStation.getValue() + road.getDistance()){
+                    Heuristic.put(road.getDestination(),curStation.getValue() + road.getDistance());
+                    q.add(new Pair<Station,Double>(road.getDestination(),Heuristic.get(road.getDestination())));
+                }
+            }
+        }
+
+    }
+
+    private double calcHeuristic (Player player) {
+        return Heuristic.get(player.getStation());
     }
 }
