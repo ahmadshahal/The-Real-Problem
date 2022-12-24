@@ -42,7 +42,7 @@ public class Player {
 
     public void walk(int distance, Station destination) {
         health -= 10 * distance;
-        time += distance * 5.5;
+        time += distance / 5.5;
         cost += 0;
         station = destination;
     }

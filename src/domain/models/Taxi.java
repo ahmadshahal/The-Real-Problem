@@ -8,7 +8,7 @@ public class Taxi {
     }
 
     public double getTimeCost(int distance) {
-        return speed * distance;
+        return distance / speed;
     }
 
     public int getEffortCost(int distance) {

@@ -14,7 +14,7 @@ public class Bus {
     }
 
     public double getTimeCost(int distance) {
-        return speed * distance;
+        return distance / speed;
     }
 
     public int getEffortCost(int distance) {
