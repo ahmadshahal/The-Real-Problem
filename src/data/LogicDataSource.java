@@ -24,12 +24,16 @@ public class LogicDataSource {
         final HashMap<Integer, Triple<Double, Double, Player>> visited = new HashMap<>();
         PriorityQueue<Triple<Double, Double, Player>> queue = new PriorityQueue<>(sortByCostThenHeuristic);
 
-        Triple<Double, Double, Player> initial = new Triple<>(0.0, this.calcHeuristic(player), player);
+        Triple<Double, Double, Player> initial = new Triple<>(0.0, calcHeuristic(player), player);
         queue.add(initial);
         visited.put(player.hashCode(), initial);
 
         while (!queue.isEmpty()) {
             Triple<Double, Double, Player> current = queue.poll();
+            if (visited.containsKey(current.hashCode())) {
+                double previousPossibleCost = visited.get(current.hashCode()).getFirst();
+                if (previousPossibleCost < current.getFirst()) continue;
+            }
             if (current.getThird().getStation().isFinal()) {
                 // TODO: Print Results.
                 return;
