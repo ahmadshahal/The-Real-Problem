@@ -22,7 +22,6 @@ public class Bus {
     }
 
     public int getMoneyCost() {
-        // TODO: Discuss.
         return 400;
     }
 }

@@ -8,6 +8,7 @@ public class Player {
     private int cost = 0;
     private double time = 0;
     private Station station;
+    private Bus previousBus = null;
 
     public Player(Station station) {
         this.station = station;
@@ -58,7 +59,10 @@ public class Player {
     }
 
     public void takeBus(Road road, Bus bus) {
-        cost += bus.getMoneyCost();
+        if(previousBus == null || !previousBus.getName().equals(bus.getName())) {
+            cost += bus.getMoneyCost();
+        }
+        previousBus = bus;
         health += bus.getEffortCost(road.getDistance());
         time += bus.getTimeCost(road.getDistance());
         time += station.getBusWaitingTime();
