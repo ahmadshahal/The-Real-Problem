@@ -1,5 +1,7 @@
 package data;
 
+import data.callbacks.CalculateCost;
+import data.callbacks.CheckConstraints;
 import domain.models.Player;
 
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ public class LogicDataSource {
         else return t1.getSecond().compareTo(t2.getSecond());
     };
 
-    public void aStar(Player player) {
+    public void aStar(Player player, CalculateCost calculateCost, CheckConstraints checkConstraints) {
 
         // Key: Player's HashCode.
         // Value: First: G (Time), Second: H, Third: Player.
@@ -40,10 +42,11 @@ public class LogicDataSource {
             }
             ArrayList<Player> children = current.getThird().getNextStates();
             for (Player child : children) {
-                Triple<Double, Double, Player> newValue = new Triple<>(child.getTime(), calcHeuristic(child), child);
+                if(!checkConstraints.fun(child)) continue;
+                Triple<Double, Double, Player> newValue = new Triple<>(calculateCost.fun(child), calcHeuristic(child), child);
                 if (visited.containsKey(child.hashCode())) {
                     double previousPossibleCost = visited.get(child.hashCode()).getFirst();
-                    if (child.getTime() < previousPossibleCost) {
+                    if (calculateCost.fun(child) < previousPossibleCost) {
                         visited.put(child.hashCode(), newValue);
                         queue.add(newValue);
                     }
