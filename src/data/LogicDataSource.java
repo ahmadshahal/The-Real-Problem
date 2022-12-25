@@ -5,7 +5,8 @@ import data.callbacks.CheckConstraints;
 import domain.models.Player;
 import domain.models.Road;
 import domain.models.Station;
-import javafx.util.Pair;
+import utils.Pair;
+import utils.Triple;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -15,7 +16,7 @@ import java.util.PriorityQueue;
 
 public class LogicDataSource {
 
-    private final HashMap <Station,Double> Heuristic  = new HashMap<>();
+    private final HashMap<Station, Double> heuristicMap = new HashMap<>();
 
     private final Comparator<Triple<Double, Double, Player>> sortByCostThenHeuristic = (t1, t2) -> {
         double totalCost1 = t1.getFirst() + t1.getSecond();
@@ -32,7 +33,7 @@ public class LogicDataSource {
         final HashMap<Integer, Triple<Double, Double, Player>> visited = new HashMap<>();
         PriorityQueue<Triple<Double, Double, Player>> queue = new PriorityQueue<>(sortByCostThenHeuristic);
 
-        Triple<Double, Double, Player> initial = new Triple<>(0.0, calcHeuristic(player), player);
+        Triple<Double, Double, Player> initial = new Triple<>(0.0, heuristic(player), player);
         queue.add(initial);
         visited.put(player.hashCode(), initial);
 
@@ -48,8 +49,8 @@ public class LogicDataSource {
             }
             ArrayList<Player> children = current.getThird().getNextStates();
             for (Player child : children) {
-                if(!checkConstraints.fun(child)) continue;
-                Triple<Double, Double, Player> newValue = new Triple<>(calculateCost.fun(child), calcHeuristic(child), child);
+                if (!checkConstraints.fun(child)) continue;
+                Triple<Double, Double, Player> newValue = new Triple<>(calculateCost.fun(child), heuristic(child), child);
                 if (visited.containsKey(child.hashCode())) {
                     double previousPossibleCost = visited.get(child.hashCode()).getFirst();
                     if (calculateCost.fun(child) < previousPossibleCost) {
@@ -65,30 +66,36 @@ public class LogicDataSource {
     }
 
 
+    public void dijkstra(Station station) {
 
-    private void Dijkstra (Station station) {
-        // sort on the second value
-        PriorityQueue <Pair<Station,Double>> q = new PriorityQueue<>((a, b) -> Double.compare(a.getValue(),b.getValue()));
-        q.add(new Pair<Station,Double>(station,0.0));
-        Heuristic.put(station,0.0);
-        while(q.size() > 0) {
-            Pair <Station,Double> curStation = q.peek();
-            Double curDistance = Heuristic.get(curStation.getKey());
-            q.poll();
-            if(curDistance != null  &&  curDistance < curStation.getValue())   continue;
+        // Sort by second.
+        PriorityQueue<Pair<Station, Double>> queue = new PriorityQueue<>(Comparator.comparingDouble(Pair::getSecond));
+        queue.add(new Pair<>(station, 0.0));
+        heuristicMap.put(station, 0.0);
+
+        while (!queue.isEmpty()) {
+            Pair<Station, Double> current = queue.poll();
+
+            Double previousPossibleDistance = heuristicMap.get(current.getFirst());
+            if (previousPossibleDistance != null && previousPossibleDistance < current.getSecond()) continue;
+
             for (Road road : station.getRoads()) {
                 Double childStationDistance = Double.MAX_VALUE;
-                if(Heuristic.get(road.getDestination()) != null)    childStationDistance = Heuristic.get(road.getDestination());
-                if(childStationDistance > curStation.getValue() + road.getDistance()){
-                    Heuristic.put(road.getDestination(),curStation.getValue() + road.getDistance());
-                    q.add(new Pair<Station,Double>(road.getDestination(),Heuristic.get(road.getDestination())));
+                Station destination = road.getDestination();
+
+                if (heuristicMap.get(destination) != null)
+                    childStationDistance = heuristicMap.get(destination);
+
+                if (childStationDistance > current.getSecond() + road.getDistance()) {
+                    heuristicMap.put(destination, current.getSecond() + road.getDistance());
+                    queue.add(new Pair<>(destination, heuristicMap.get(destination)));
                 }
             }
         }
 
     }
 
-    private double calcHeuristic (Player player) {
-        return Heuristic.get(player.getStation());
+    private double heuristic(Player player) {
+        return heuristicMap.get(player.getStation());
     }
 }
