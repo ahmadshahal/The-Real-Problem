@@ -8,10 +8,7 @@ import domain.models.Station;
 import utils.Pair;
 import utils.Triple;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.PriorityQueue;
+import java.util.*;
 
 
 public class LogicDataSource {
@@ -28,6 +25,17 @@ public class LogicDataSource {
 
     public void aStar(Player player, CalculateCost calculateCost, CheckConstraints checkConstraints) {
 
+        // Station Time
+        final HashMap <Station,Double> stationTime = new HashMap<>();
+        // Station Money
+        final HashMap <Station,Integer> stationMoney = new HashMap<>();
+        // Station Cost
+        final HashMap <Station,Integer> stationCost = new HashMap<>();
+        // Station way of transmission (Taxi , Bus , Walk)
+        final HashMap <Station,String> stationTransmission = new HashMap<>();
+        // Station Parent
+        final HashMap <Station,Station> stationParent = new HashMap<>();
+
         // Key: Player's HashCode.
         // Value: First: G (Time), Second: H, Third: Player.
         final HashMap<Integer, Triple<Double, Double, Player>> visited = new HashMap<>();
@@ -43,19 +51,49 @@ public class LogicDataSource {
                 double previousPossibleCost = visited.get(current.hashCode()).getFirst();
                 if (previousPossibleCost < current.getFirst()) continue;
             }
+
+            // Update
+            stationTime.put(player.getStation(),player.getTime());
+            stationMoney.put(player.getStation(),player.getMoney());
+            stationCost.put(player.getStation(),player.getCost());
+
             if (current.getThird().getStation().isFinal()) {
-                // TODO: Print Results.
+                // TODO: add Performance Time
+                System.out.println("Performance Time : ");
+                System.out.println("The number of visited states : "+visited.size());
+                System.out.println("The Path : ");
+
+                Deque <Station> path = new LinkedList<>();
+                // TODO: add Current Station and Final Station
+                Station currentStation = new Station(1,true,1,1,null);
+                Station startStation = new Station(100,true,1,1,null);
+                while(!currentStation.equals(startStation)){
+                    path.addFirst(currentStation);
+                    currentStation = stationParent.get(currentStation);
+                }
+                for(Station station : path ) {
+                    System.out.print("Station ID : " + station.getStationId());
+                    System.out.print(" Station Time : " + stationTime.get(station));
+                    System.out.print(" Station Money : " + stationMoney.get(station));
+                    System.out.print(" Station Cost : " + stationCost.get(station));
+                    System.out.println(" Station Way Of Transmission : " + stationTransmission.get(station));
+                }
+
                 return;
             }
-            ArrayList<Player> children = current.getThird().getNextStates();
-            for (Player child : children) {
-                if (!checkConstraints.fun(child)) continue;
-                Triple<Double, Double, Player> newValue = new Triple<>(calculateCost.fun(child), heuristic(child), child);
+            ArrayList<Pair<Player,String>> children = current.getThird().getNextStates();
+            for (Pair<Player,String> child : children) {
+                if (!checkConstraints.fun(child.getFirst())) continue;
+                Triple<Double, Double, Player> newValue = new Triple<>(calculateCost.fun(child.getFirst()), heuristic(child.getFirst()), child.getFirst());
                 if (visited.containsKey(child.hashCode())) {
                     double previousPossibleCost = visited.get(child.hashCode()).getFirst();
-                    if (calculateCost.fun(child) < previousPossibleCost) {
+                    if (calculateCost.fun(child.getFirst()) < previousPossibleCost) {
                         visited.put(child.hashCode(), newValue);
                         queue.add(newValue);
+
+                        // Update
+                        stationParent.put(child.getFirst().getStation(),player.getStation());
+                        stationTransmission.put(child.getFirst().getStation(),child.getSecond());
                     }
                 } else {
                     visited.put(child.hashCode(), newValue);

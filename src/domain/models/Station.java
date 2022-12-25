@@ -16,6 +16,10 @@ public class Station {
         this.roads = roads;
     }
 
+    public int getStationId() {
+        return id;
+    }
+
     public boolean isFinal() {
         return isFinal;
     }
