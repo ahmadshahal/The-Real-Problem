@@ -52,7 +52,7 @@ public class Player {
     }
 
     public int getMaxHealth() {
-        return 10000;
+        return 1000;
     }
 
     public int getTakenHealth() {

@@ -142,40 +142,44 @@ public class Main {
         assert finalStation != null;
         logicDataSource.initHeuristicByDijkstra(finalStation);
 
+        /*
         logicDataSource.aStar(
                 initPlayer,
                 Player::getTime,
                 player -> player.getTakenMoney() <= player.getMaxMoney() && player.getTakenHealth() <= player.getMaxHealth(),
-                distance -> distance / 5.5
+                distance -> distance / 5.5 // TODO: Consider 160
         );
+         */
 
         /*
         logicDataSource.aStar(
                 initPlayer,
                 Player::getTakenMoney,
                 player -> player.getTakenHealth() <= player.getMaxHealth(),
-                distance -> distance * 1000
+                distance -> distance * 1000 // TODO: Consider 0
         );
+         */
 
+        /*
         logicDataSource.aStar(
                 initPlayer,
                 Player::getTakenHealth,
                 player -> player.getTakenMoney() <= player.getMaxMoney(),
-                distance -> distance * 10
+                distance -> distance * 10 // TODO: Consider -10
         );
          */
 
+        /*
+        logicDataSource.aStar(
+                initPlayer,
+                player -> player.getTime() + player.getTakenHealth() + player.getTakenMoney(),
+                player -> true,
+                distance -> (distance / 5.5) + (distance * 1000) + (distance * 10)
+        );
+         */
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         System.out.println("Elapsed Time: " + elapsedTime + " ms");
     }
 }
-
-/*
-
-        // Q3 - 1:
-
-        // Q3 - 2:
-
- */
