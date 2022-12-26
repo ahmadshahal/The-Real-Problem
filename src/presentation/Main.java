@@ -145,12 +145,13 @@ public class Main {
         logicDataSource.aStar(
                 initPlayer,
                 Player::getTime,
-                player -> player.getCost() <= player.getMoney() && player.getHealth() >= 0
+                player -> player.getCost() <= player.getMoney() && player.getHealth() >= 0,
+                distance -> distance / 5.5
         );
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
-        System.out.println(elapsedTime + " ms");
+        System.out.println("Elapsed Time: " + elapsedTime + " ms");
     }
 }
 

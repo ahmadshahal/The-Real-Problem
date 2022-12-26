@@ -1,6 +1,7 @@
 package data;
 
 import data.callbacks.CalculateCost;
+import data.callbacks.CalculateHeuristic;
 import data.callbacks.CheckConstraints;
 import data.utils.AStarUsage;
 import data.utils.DijkstraUsage;
@@ -14,16 +15,22 @@ import java.util.*;
 
 public class LogicDataSource {
 
-    private final HashMap<Integer, Double> heuristicMap = new HashMap<>();
+    private final HashMap<Integer, Double> distanceMap = new HashMap<>();
 
-    public void aStar(Player player, CalculateCost calculateCost, CheckConstraints checkConstraints) {
+    public void aStar(
+            Player player,
+            CalculateCost calculateCost,
+            CheckConstraints checkConstraints,
+            CalculateHeuristic calculateHeuristic
+    ) {
         int visitedNodes = 0;
 
         // Key: Player's HashCode.
         final HashMap<Integer, AStarUsage> visited = new HashMap<>();
         PriorityQueue<AStarUsage> queue = new PriorityQueue<>(AStarUsage.sortByCostThenHeuristic);
 
-        AStarUsage initial = new AStarUsage(0.0, heuristic(player), player);
+        double initHeuristic = calculateHeuristic.fun(distanceFromGoal(player));
+        AStarUsage initial = new AStarUsage(0.0, initHeuristic, player);
         queue.add(initial);
         visited.put(player.hashCode(), initial);
 
@@ -40,7 +47,8 @@ public class LogicDataSource {
             ArrayList<Player> children = current.player.getNextStates();
             for (Player child : children) {
                 if (!checkConstraints.fun(child)) continue;
-                AStarUsage newValue = new AStarUsage(calculateCost.fun(child), heuristic(child), child);
+                double childHeuristic = calculateHeuristic.fun(distanceFromGoal(child));
+                AStarUsage newValue = new AStarUsage(calculateCost.fun(child), childHeuristic, child);
                 if (visited.containsKey(child.hashCode())) {
                     double previousPossibleCost = visited.get(child.hashCode()).cost;
                     if (calculateCost.fun(child) < previousPossibleCost) {
@@ -53,6 +61,8 @@ public class LogicDataSource {
                 }
             }
         }
+
+        System.out.println("Problem can't be solved..");
     }
 
 
@@ -66,30 +76,30 @@ public class LogicDataSource {
         // Sort by cost.
         PriorityQueue<DijkstraUsage> queue = new PriorityQueue<>(DijkstraUsage.sortByDistance);
         queue.add(new DijkstraUsage(station, 0.0));
-        heuristicMap.put(station.hashCode(), 0.0);
+        distanceMap.put(station.hashCode(), 0.0);
 
         while (!queue.isEmpty()) {
             DijkstraUsage current = queue.poll();
 
-            Double previousPossibleDistance = heuristicMap.get(current.station.hashCode());
+            Double previousPossibleDistance = distanceMap.get(current.station.hashCode());
             if (previousPossibleDistance != null && previousPossibleDistance < current.distance) continue;
 
             for (Road road : current.station.getInRoads()) {
                 Double childStationDistance = Double.MAX_VALUE;
                 Station destination = road.getDestination();
 
-                if (heuristicMap.get(destination.hashCode()) != null)
-                    childStationDistance = heuristicMap.get(destination.hashCode());
+                if (distanceMap.get(destination.hashCode()) != null)
+                    childStationDistance = distanceMap.get(destination.hashCode());
 
                 if (childStationDistance > current.distance + road.getDistance()) {
-                    heuristicMap.put(destination.hashCode(), current.distance + road.getDistance());
-                    queue.add(new DijkstraUsage(destination, heuristicMap.get(destination.hashCode())));
+                    distanceMap.put(destination.hashCode(), current.distance + road.getDistance());
+                    queue.add(new DijkstraUsage(destination, distanceMap.get(destination.hashCode())));
                 }
             }
         }
     }
 
-    private double heuristic(Player player) {
-        return heuristicMap.get(player.getStation().hashCode());
+    private double distanceFromGoal(Player player) {
+         return distanceMap.get(player.getStation().hashCode());
     }
 }
