@@ -18,7 +18,7 @@ public class Bus {
     }
 
     public int getEffortCost(int distance) {
-        return -5 * distance;
+        return 5 * distance;
     }
 
     public int getMoneyCost() {

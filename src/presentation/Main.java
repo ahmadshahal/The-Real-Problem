@@ -145,9 +145,26 @@ public class Main {
         logicDataSource.aStar(
                 initPlayer,
                 Player::getTime,
-                player -> player.getCost() <= player.getMoney() && player.getHealth() >= 0,
+                player -> player.getTakenMoney() <= player.getMaxMoney() && player.getTakenHealth() <= player.getMaxHealth(),
                 distance -> distance / 5.5
         );
+
+        /*
+        logicDataSource.aStar(
+                initPlayer,
+                Player::getTakenMoney,
+                player -> player.getTakenHealth() <= player.getMaxHealth(),
+                distance -> distance * 1000
+        );
+
+        logicDataSource.aStar(
+                initPlayer,
+                Player::getTakenHealth,
+                player -> player.getTakenMoney() <= player.getMaxMoney(),
+                distance -> distance * 10
+        );
+         */
+
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
@@ -156,24 +173,9 @@ public class Main {
 }
 
 /*
-        // Q1:
-        logicDataSource.aStar(
-                new Player(new Station(0, false, 2, 2, null)),
-                Player::getTime,
-                player -> player.getCost() <= player.getMoney() && player.getHealth() >= 0
-        );
 
         // Q3 - 1:
-        logicDataSource.aStar(
-                new Player(new Station(0, false, 2, 2, null)),
-                Player::getCost,
-                player -> player.getHealth() >= 0
-        );
 
         // Q3 - 2:
-        logicDataSource.aStar(
-                new Player(new Station(0, false, 2, 2, null)),
-                player -> player.getHealth() * -1,
-                player -> player.getCost() <= player.getMoney()
-        );
+
  */

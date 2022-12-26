@@ -6,34 +6,34 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Player {
-    private int health = 10000;
-    private final int money;
+    private int takenHealth = 0;
+    private final int maxMoney;
     private double time = 0;
-    private int cost = 0;
+    private int takenMoney = 0;
     private Station station;
     private Bus previousBus = null;
     private TransmissionWay previousTransmissionWay = null;
     private Player parent = null;
 
-    public Player(Station station, int money) {
+    public Player(Station station, int maxMoney) {
         this.station = station;
-        this.money = money;
+        this.maxMoney = maxMoney;
     }
 
     private Player(Station station,
-                   int health,
-                   int money,
+                   int takenHealth,
+                   int maxMoney,
                    double time,
-                   int cost,
+                   int takenMoney,
                    Bus previousBus,
                    TransmissionWay previousTransmissionWay,
                    Player parent
     ) {
         this.station = station;
-        this.health = health;
-        this.money = money;
+        this.takenHealth = takenHealth;
+        this.maxMoney = maxMoney;
         this.time = time;
-        this.cost = cost;
+        this.takenMoney = takenMoney;
         this.previousBus = previousBus;
         this.previousTransmissionWay = previousTransmissionWay;
         this.parent = parent;
@@ -47,16 +47,20 @@ public class Player {
         return this.time;
     }
 
-    public int getCost() {
-        return this.cost;
+    public int getTakenMoney() {
+        return this.takenMoney;
     }
 
-    public int getHealth() {
-        return this.health;
+    public int getMaxHealth() {
+        return 10000;
     }
 
-    public int getMoney() {
-        return this.money;
+    public int getTakenHealth() {
+        return this.takenHealth;
+    }
+
+    public int getMaxMoney() {
+        return this.maxMoney;
     }
 
     public TransmissionWay getPreviousTransmissionWay() {
@@ -94,16 +98,16 @@ public class Player {
 
     public void walk(Road road) {
         previousTransmissionWay = TransmissionWay.Walk;
-        health -= 10 * road.getDistance();
+        takenHealth += 10 * road.getDistance();
         time += road.getDistance() / 5.5;
-        cost += 0;
+        takenMoney += 0;
         station = road.getDestination();
     }
 
     public void takeTaxi(Road road) {
         previousTransmissionWay = TransmissionWay.Taxi;
-        cost += road.getTaxi().getMoneyCost(road.getDistance());
-        health += road.getTaxi().getEffortCost(road.getDistance());
+        takenMoney += road.getTaxi().getMoneyCost(road.getDistance());
+        takenHealth += road.getTaxi().getEffortCost(road.getDistance());
         time += road.getTaxi().getTimeCost(road.getDistance());
         time += station.getTaxiWaitingTime();
         station = road.getDestination();
@@ -111,11 +115,11 @@ public class Player {
 
     public void takeBus(Road road, Bus bus) {
         if (previousTransmissionWay != TransmissionWay.Bus || !previousBus.getName().equals(bus.getName())) {
-            cost += bus.getMoneyCost();
+            takenMoney += bus.getMoneyCost();
         }
         previousTransmissionWay = TransmissionWay.Bus;
         previousBus = bus;
-        health += bus.getEffortCost(road.getDistance());
+        takenHealth += bus.getEffortCost(road.getDistance());
         time += bus.getTimeCost(road.getDistance());
         time += station.getBusWaitingTime();
         station = road.getDestination();
@@ -126,21 +130,21 @@ public class Player {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return health == player.health && money == player.money && Double.compare(player.time, time) == 0 && cost == player.cost && station.equals(player.station) && Objects.equals(previousBus, player.previousBus) && previousTransmissionWay == player.previousTransmissionWay && Objects.equals(parent, player.parent);
+        return takenHealth == player.takenHealth && maxMoney == player.maxMoney && Double.compare(player.time, time) == 0 && takenMoney == player.takenMoney && station.equals(player.station) && Objects.equals(previousBus, player.previousBus) && previousTransmissionWay == player.previousTransmissionWay && Objects.equals(parent, player.parent);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(health, money, time, cost, station, previousBus, previousTransmissionWay, parent);
+        return Objects.hash(takenHealth, maxMoney, time, takenMoney, station, previousBus, previousTransmissionWay, parent);
     }
 
     public Player copy() {
         return new Player(
                 this.station,
-                this.health,
-                this.money,
+                this.takenHealth,
+                this.maxMoney,
                 this.time,
-                this.cost,
+                this.takenMoney,
                 this.previousBus,
                 this.previousTransmissionWay,
                 this.parent

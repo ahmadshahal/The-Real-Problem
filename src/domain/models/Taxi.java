@@ -12,7 +12,7 @@ public class Taxi {
     }
 
     public int getEffortCost(int distance) {
-        return 5 * distance;
+        return -5 * distance;
     }
 
     public int getMoneyCost(int distance) {

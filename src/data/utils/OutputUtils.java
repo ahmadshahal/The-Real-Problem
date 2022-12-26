@@ -17,9 +17,8 @@ public class OutputUtils {
         for (Player playerTemp : path) {
             System.out.println("Station: " + playerTemp.getStation().getStationName());
             System.out.println("Time: " + playerTemp.getTime());
-            System.out.println("Health: " + playerTemp.getHealth());
-            System.out.println("Money: " + playerTemp.getMoney());
-            System.out.println("Cost: " + playerTemp.getCost());
+            System.out.println("Health spent: " + playerTemp.getTakenHealth());
+            System.out.println("Money spent: " + playerTemp.getTakenMoney());
             if(playerTemp.getPreviousTransmissionWay() != null) {
                 System.out.println("Transmission Way: " + playerTemp.getPreviousTransmissionWay().getMessage());
             }
