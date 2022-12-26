@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class Player {
     private int health = 100;
-    private int money = 10000;
+    private final int money;
     private double time = 0;
     private int cost = 0;
     private Station station;
@@ -15,8 +15,9 @@ public class Player {
     private TransmissionWay previousTransmissionWay = null;
     private Player parent = null;
 
-    public Player(Station station) {
+    public Player(Station station, int money) {
         this.station = station;
+        this.money = money;
     }
 
     private Player(Station station,

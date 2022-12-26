@@ -1,19 +1,20 @@
 package domain.models;
 
 
+import java.util.ArrayList;
+
 public class Station {
     private final String name;
     private final boolean isFinal;
     private final int taxiWaitingTime;
     private final int busWaitingTime;
-    private final Road[] roads;
+    private final ArrayList<Road> roads = new ArrayList<>();
 
-    public Station(String name, boolean isFinal, int taxiWaitingTime, int busWaitingTime, Road[] roads) {
+    public Station(String name, boolean isFinal, int taxiWaitingTime, int busWaitingTime) {
         this.name = name;
         this.isFinal = isFinal;
         this.taxiWaitingTime = taxiWaitingTime;
         this.busWaitingTime = busWaitingTime;
-        this.roads = roads;
     }
 
     public String getStationName() {
@@ -32,7 +33,7 @@ public class Station {
         return busWaitingTime;
     }
 
-    public Road[] getRoads() {
+    public ArrayList<Road> getRoads() {
         return roads;
     }
 }
