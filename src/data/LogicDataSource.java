@@ -18,7 +18,6 @@ public class LogicDataSource {
     public void aStar(Player player, CalculateCost calculateCost, CheckConstraints checkConstraints) {
 
         // Key: Player's HashCode.
-        // Value: First: G (Time), Second: H, Third: Player.
         final HashMap<Integer, AStarUsage> visited = new HashMap<>();
         PriorityQueue<AStarUsage> queue = new PriorityQueue<>(AStarUsage.sortByCostThenHeuristic);
 
