@@ -38,6 +38,10 @@ public class Player {
         return this.cost;
     }
 
+    public int getHealth() {
+        return this.health;
+    }
+
     public int getMoney() {
         return this.money;
     }
