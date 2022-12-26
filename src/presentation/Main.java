@@ -8,6 +8,16 @@ public class Main {
     private static final LogicDataSource logicDataSource = new LogicDataSource();
 
     public static void main(String[] args) {
+        long startTime = System.currentTimeMillis();
+
+
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        System.out.println(elapsedTime + " ms");
+    }
+}
+
+/*
         // Q1:
         logicDataSource.aStar(
                 new Player(new Station(0, false, 2, 2, null)),
@@ -28,5 +38,4 @@ public class Main {
                 player -> player.getHealth() * -1,
                 player -> player.getCost() <= player.getMoney()
         );
-    }
-}
+ */

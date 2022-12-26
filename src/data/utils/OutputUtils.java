@@ -15,7 +15,7 @@ public class OutputUtils {
         }
         Collections.reverse(path);
         for (Player playerTemp : path) {
-            System.out.println("Station: " + playerTemp.getStation().getStationId());
+            System.out.println("Station: " + playerTemp.getStation().getStationName());
             System.out.println("Time: " + playerTemp.getTime());
             System.out.println("Health: " + playerTemp.getHealth());
             System.out.println("Money: " + playerTemp.getMoney());

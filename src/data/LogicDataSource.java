@@ -17,6 +17,7 @@ public class LogicDataSource {
     private final HashMap<Station, Double> heuristicMap = new HashMap<>();
 
     public void aStar(Player player, CalculateCost calculateCost, CheckConstraints checkConstraints) {
+        int visitedNodes = 0;
 
         // Key: Player's HashCode.
         final HashMap<Integer, AStarUsage> visited = new HashMap<>();
@@ -28,12 +29,12 @@ public class LogicDataSource {
 
         while (!queue.isEmpty()) {
             AStarUsage current = queue.poll();
-            if (visited.containsKey(current.player.hashCode())) {
-                double previousPossibleCost = visited.get(current.hashCode()).cost;
-                if (previousPossibleCost < current.cost) continue;
-            }
+
+            visitedNodes++;
+
             if (current.player.getStation().isFinal()) {
                 OutputUtils.printPath(current.player);
+                System.out.println("Visited Nodes: " + visitedNodes);
                 return;
             }
             ArrayList<Player> children = current.player.getNextStates();
