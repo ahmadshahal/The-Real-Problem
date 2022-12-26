@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Player {
-    private int health = 100;
+    private int health = 10000;
     private final int money;
     private double time = 0;
     private int cost = 0;
@@ -72,17 +72,20 @@ public class Player {
         for (Road road : this.station.getOutRoads()) {
             if (road.getTaxi() != null) {
                 Player player = this.copy();
+                player.parent = this;
                 player.takeTaxi(road);
                 players.add(player);
             }
             if (road.getBuses() != null && road.getBuses().size() != 0) {
                 for (Bus bus : road.getBuses()) {
                     Player player = this.copy();
+                    player.parent = this;
                     player.takeBus(road, bus);
                     players.add(player);
                 }
             }
             Player player = this.copy();
+            player.parent = this;
             player.walk(road);
             players.add(player);
         }
