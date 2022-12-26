@@ -14,7 +14,7 @@ import java.util.*;
 
 public class LogicDataSource {
 
-    private final HashMap<Station, Double> heuristicMap = new HashMap<>();
+    private final HashMap<Integer, Double> heuristicMap = new HashMap<>();
 
     public void aStar(Player player, CalculateCost calculateCost, CheckConstraints checkConstraints) {
         int visitedNodes = 0;
@@ -66,30 +66,30 @@ public class LogicDataSource {
         // Sort by cost.
         PriorityQueue<DijkstraUsage> queue = new PriorityQueue<>(DijkstraUsage.sortByDistance);
         queue.add(new DijkstraUsage(station, 0.0));
-        heuristicMap.put(station, 0.0);
+        heuristicMap.put(station.hashCode(), 0.0);
 
         while (!queue.isEmpty()) {
             DijkstraUsage current = queue.poll();
 
-            Double previousPossibleDistance = heuristicMap.get(current.station);
+            Double previousPossibleDistance = heuristicMap.get(current.station.hashCode());
             if (previousPossibleDistance != null && previousPossibleDistance < current.distance) continue;
 
             for (Road road : station.getInRoads()) {
                 Double childStationDistance = Double.MAX_VALUE;
                 Station destination = road.getDestination();
 
-                if (heuristicMap.get(destination) != null)
-                    childStationDistance = heuristicMap.get(destination);
+                if (heuristicMap.get(destination.hashCode()) != null)
+                    childStationDistance = heuristicMap.get(destination.hashCode());
 
                 if (childStationDistance > current.distance + road.getDistance()) {
-                    heuristicMap.put(destination, current.distance + road.getDistance());
-                    queue.add(new DijkstraUsage(destination, heuristicMap.get(destination)));
+                    heuristicMap.put(destination.hashCode(), current.distance + road.getDistance());
+                    queue.add(new DijkstraUsage(destination, heuristicMap.get(destination.hashCode())));
                 }
             }
         }
     }
 
     private double heuristic(Player player) {
-        return heuristicMap.get(player.getStation());
+        return heuristicMap.get(player.getStation().hashCode());
     }
 }
