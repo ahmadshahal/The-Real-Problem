@@ -6,11 +6,11 @@ import java.util.ArrayList;
 public class Station {
     private final String name;
     private final boolean isFinal;
-    private final int taxiWaitingTime;
-    private final int busWaitingTime;
+    private final double taxiWaitingTime;
+    private final double busWaitingTime;
     private final ArrayList<Road> roads = new ArrayList<>();
 
-    public Station(String name, boolean isFinal, int taxiWaitingTime, int busWaitingTime) {
+    public Station(String name, boolean isFinal, double taxiWaitingTime, double busWaitingTime) {
         this.name = name;
         this.isFinal = isFinal;
         this.taxiWaitingTime = taxiWaitingTime;
@@ -25,11 +25,11 @@ public class Station {
         return isFinal;
     }
 
-    public int getTaxiWaitingTime() {
+    public double getTaxiWaitingTime() {
         return taxiWaitingTime;
     }
 
-    public int getBusWaitingTime() {
+    public double getBusWaitingTime() {
         return busWaitingTime;
     }
 

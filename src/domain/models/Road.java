@@ -1,12 +1,14 @@
 package domain.models;
 
+import java.util.ArrayList;
+
 public class Road {
     private final int distance;
-    private final Bus[] buses; // Defaults to null.
+    private final ArrayList<Bus> buses; // Defaults to null.
     private final Taxi taxi; // Defaults to null.
     private final Station destination;
 
-    public Road(int distance, Bus[] buses, Taxi taxi, Station destination) {
+    public Road(int distance, ArrayList<Bus> buses, Taxi taxi, Station destination) {
         this.distance = distance;
         this.buses = buses;
         this.taxi = taxi;
@@ -21,7 +23,7 @@ public class Road {
         return destination;
     }
 
-    public Bus[] getBuses() {
+    public ArrayList<Bus> getBuses() {
         return buses;
     }
 

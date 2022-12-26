@@ -75,7 +75,7 @@ public class Player {
                 player.takeTaxi(road);
                 players.add(player);
             }
-            if (road.getBuses() != null && road.getBuses().length != 0) {
+            if (road.getBuses() != null && road.getBuses().size() != 0) {
                 for (Bus bus : road.getBuses()) {
                     Player player = this.copy();
                     player.takeBus(road, bus);
