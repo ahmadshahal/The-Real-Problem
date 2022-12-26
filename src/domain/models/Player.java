@@ -1,7 +1,5 @@
 package domain.models;
 
-import utils.Pair;
-
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -46,24 +44,24 @@ public class Player {
         return this.money;
     }
 
-    public ArrayList<Pair<Player,String>> getNextStates() {
-        ArrayList<Pair<Player,String>> players = new ArrayList<>();
+    public ArrayList<Player> getNextStates() {
+        ArrayList<Player> players = new ArrayList<>();
         for (Road road : this.station.getRoads()) {
             if (road.getTaxi() != null) {
                 Player player = this.copy();
                 player.takeTaxi(road);
-                players.add(new Pair<>(player,"Taxi"));
+                players.add(player);
             }
             if (road.getBuses() != null && road.getBuses().length != 0) {
                 for (Bus bus : road.getBuses()) {
                     Player player = this.copy();
                     player.takeBus(road, bus);
-                    players.add(new Pair<>(player,"Bus"));
+                    players.add(player);
                 }
             }
             Player player = this.copy();
             player.walk(road);
-            players.add(new Pair<>(player,"Walk"));
+            players.add(player);
         }
         return players;
     }
