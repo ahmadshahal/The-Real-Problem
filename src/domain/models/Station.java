@@ -8,7 +8,8 @@ public class Station {
     private final boolean isFinal;
     private final double taxiWaitingTime;
     private final double busWaitingTime;
-    private final ArrayList<Road> roads = new ArrayList<>();
+    private final ArrayList<Road> outRoads = new ArrayList<>();
+    private final ArrayList<Road> inRoads = new ArrayList<>();
 
     public Station(String name, boolean isFinal, double taxiWaitingTime, double busWaitingTime) {
         this.name = name;
@@ -33,7 +34,11 @@ public class Station {
         return busWaitingTime;
     }
 
-    public ArrayList<Road> getRoads() {
-        return roads;
+    public ArrayList<Road> getOutRoads() {
+        return outRoads;
+    }
+
+    public ArrayList<Road> getInRoads() {
+        return inRoads;
     }
 }

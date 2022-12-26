@@ -24,6 +24,8 @@ public class Main {
 
         ArrayList<Station> stations = new ArrayList<>();
         for (int i = 0; i < stationsCount; i++) {
+            out.println("Station " + (i + 1));
+
             out.println("Enter station's name:");
             String stationName = scanner.nextLine();
 
@@ -46,6 +48,8 @@ public class Main {
         scanner.nextLine();
 
         for (int i = 0; i < roadsCount; i++) {
+            out.println("Road " + (i + 1));
+
             out.println("Enter the source station's name of this Road:");
             String sourceStationName = scanner.nextLine();
 
@@ -102,10 +106,13 @@ public class Main {
                 }
             }
             assert destinationStation != null;
-            Road road = new Road(roadDistance, buss, taxi, destinationStation);
-
             assert sourceStation != null;
-            sourceStation.getRoads().add(road);
+
+            Road outRoad = new Road(roadDistance, buss, taxi, destinationStation);
+            Road inRoad = new Road(roadDistance, buss, taxi, sourceStation);
+
+            destinationStation.getInRoads().add(inRoad);
+            sourceStation.getOutRoads().add(outRoad);
         }
 
         Station finalStation = null;
@@ -116,10 +123,24 @@ public class Main {
             }
         }
 
-        assert finalStation != null;
-        Player initPlayer = new Player(finalStation, money);
+        out.println("Enter initial station's name:");
+        String initStationName = scanner.nextLine();
+
+        Station initStation = null;
+        for (Station station : stations) {
+            if(Objects.equals(station.getStationName(), initStationName)) {
+                initStation = station;
+                break;
+            }
+        }
+
+        assert initStation != null;
+        Player initPlayer = new Player(initStation, money);
 
         long startTime = System.currentTimeMillis();
+
+        assert finalStation != null;
+        logicDataSource.initHeuristicByDijkstra(finalStation);
 
         logicDataSource.aStar(
                 initPlayer,

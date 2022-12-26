@@ -69,7 +69,7 @@ public class Player {
 
     public ArrayList<Player> getNextStates() {
         ArrayList<Player> players = new ArrayList<>();
-        for (Road road : this.station.getRoads()) {
+        for (Road road : this.station.getOutRoads()) {
             if (road.getTaxi() != null) {
                 Player player = this.copy();
                 player.takeTaxi(road);
