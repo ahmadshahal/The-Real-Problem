@@ -74,7 +74,7 @@ public class LogicDataSource {
             Double previousPossibleDistance = heuristicMap.get(current.station.hashCode());
             if (previousPossibleDistance != null && previousPossibleDistance < current.distance) continue;
 
-            for (Road road : station.getInRoads()) {
+            for (Road road : current.station.getInRoads()) {
                 Double childStationDistance = Double.MAX_VALUE;
                 Station destination = road.getDestination();
 

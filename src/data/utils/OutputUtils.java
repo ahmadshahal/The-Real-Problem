@@ -21,8 +21,9 @@ public class OutputUtils {
             System.out.println("Money: " + playerTemp.getMoney());
             System.out.println("Cost: " + playerTemp.getCost());
             if(playerTemp.getPreviousTransmissionWay() != null) {
-                System.out.println("TransmissionWay: " + playerTemp.getPreviousTransmissionWay().getMessage());
+                System.out.println("Transmission Way: " + playerTemp.getPreviousTransmissionWay().getMessage());
             }
+            System.out.println("===================================================");
         }
     }
 }
