@@ -58,6 +58,14 @@ public class Player {
         return this.money;
     }
 
+    public TransmissionWay getPreviousTransmissionWay() {
+        return previousTransmissionWay;
+    }
+
+    public Player getParent() {
+        return this.parent;
+    }
+
     public ArrayList<Player> getNextStates() {
         ArrayList<Player> players = new ArrayList<>();
         for (Road road : this.station.getRoads()) {

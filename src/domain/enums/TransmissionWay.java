@@ -1,17 +1,17 @@
 package domain.enums;
 
 public enum TransmissionWay {
-    Walk("Walk"),
-    Bus("Bus"),
-    Taxi("Taxi");
+    Walk("Walked Here"),
+    Bus("Took a Bus"),
+    Taxi("Took a Taxi");
 
-    private final String name;
+    private final String message;
 
-    TransmissionWay(String name) {
-        this.name = name;
+    TransmissionWay(String message) {
+        this.message = message;
     }
 
-    public String getName() {
-        return name;
+    public String getMessage() {
+        return message;
     }
 }

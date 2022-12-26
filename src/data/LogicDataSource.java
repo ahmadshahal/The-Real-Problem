@@ -4,6 +4,7 @@ import data.callbacks.CalculateCost;
 import data.callbacks.CheckConstraints;
 import data.utils.AStarUsage;
 import data.utils.DijkstraUsage;
+import data.utils.OutputUtils;
 import domain.models.Player;
 import domain.models.Road;
 import domain.models.Station;
@@ -32,6 +33,7 @@ public class LogicDataSource {
                 if (previousPossibleCost < current.cost) continue;
             }
             if (current.player.getStation().isFinal()) {
+                OutputUtils.printPath(current.player);
                 return;
             }
             ArrayList<Player> children = current.player.getNextStates();
