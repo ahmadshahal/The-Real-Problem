@@ -64,7 +64,7 @@ public class Main {
             boolean hasTaxis = Objects.equals(scanner.nextLine(), "Y");
 
             Taxi taxi = null;
-            if(hasTaxis) {
+            if (hasTaxis) {
                 out.println("Enter taxi's speed (KM/H):");
                 double taxiSpeed = scanner.nextDouble();
                 scanner.nextLine();
@@ -76,7 +76,7 @@ public class Main {
             boolean hasBusses = Objects.equals(scanner.nextLine(), "Y");
 
             ArrayList<Bus> buss = null;
-            if(hasBusses) {
+            if (hasBusses) {
                 out.println("Enter bus's speed (KM/H):");
                 double busSpeed = scanner.nextDouble();
                 scanner.nextLine();
@@ -98,10 +98,10 @@ public class Main {
             Station destinationStation = null;
 
             for (Station station : stations) {
-                if(Objects.equals(station.getStationName(), sourceStationName)) {
+                if (Objects.equals(station.getStationName(), sourceStationName)) {
                     sourceStation = station;
                 }
-                if(Objects.equals(station.getStationName(), destinationStationName)) {
+                if (Objects.equals(station.getStationName(), destinationStationName)) {
                     destinationStation = station;
                 }
             }
@@ -117,7 +117,7 @@ public class Main {
 
         Station finalStation = null;
         for (Station station : stations) {
-            if(station.isFinal()) {
+            if (station.isFinal()) {
                 finalStation = station;
                 break;
             }
@@ -128,7 +128,7 @@ public class Main {
 
         Station initStation = null;
         for (Station station : stations) {
-            if(Objects.equals(station.getStationName(), initStationName)) {
+            if (Objects.equals(station.getStationName(), initStationName)) {
                 initStation = station;
                 break;
             }
@@ -147,7 +147,7 @@ public class Main {
                 initPlayer,
                 Player::getTime,
                 player -> player.getTakenMoney() <= player.getMaxMoney() && player.getTakenHealth() <= player.getMaxHealth(),
-                distance -> distance / 5.5 // TODO: Consider 160
+                distance -> distance / 160 // Always taking the fastest taxi.
         );
          */
 
@@ -156,7 +156,7 @@ public class Main {
                 initPlayer,
                 Player::getTakenMoney,
                 player -> player.getTakenHealth() <= player.getMaxHealth(),
-                distance -> distance * 1000 // TODO: Consider 0
+                distance -> distance * 400 // TODO: Consider 0
         );
          */
 
@@ -165,18 +165,20 @@ public class Main {
                 initPlayer,
                 Player::getTakenHealth,
                 player -> player.getTakenMoney() <= player.getMaxMoney(),
-                distance -> distance * 10 // TODO: Consider -10
+                distance -> distance * -5 // Always taking a taxi.
         );
          */
 
-        /*
         logicDataSource.aStar(
                 initPlayer,
-                player -> player.getTime() + player.getTakenHealth() + player.getTakenMoney(),
-                player -> true,
-                distance -> (distance / 5.5) + (distance * 1000) + (distance * 10)
+                player -> (player.getTime() / 3) + // Three Hours as a Max hours.
+                        (player.getTakenHealth() / player.getMaxHealth()) +
+                        (player.getTakenMoney() / player.getMaxMoney()),
+                player -> player.getTakenMoney() <= player.getMaxMoney() && player.getTakenHealth() <= player.getMaxHealth(),
+                distance -> ((distance / 160) / 3) +
+                        ((distance * 0) / initPlayer.getMaxHealth()) +
+                        ((distance * -5) / initPlayer.getMaxMoney())
         );
-         */
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
