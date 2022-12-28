@@ -142,21 +142,19 @@ public class Main {
         assert finalStation != null;
         logicDataSource.initHeuristicByDijkstra(finalStation);
 
-        /*
         logicDataSource.aStar(
                 initPlayer,
                 Player::getTime,
                 player -> player.getTakenMoney() <= player.getMaxMoney() && player.getTakenHealth() <= player.getMaxHealth(),
-                distance -> distance / 160 // Always taking the fastest taxi.
+                distance -> distance
         );
-         */
 
         /*
         logicDataSource.aStar(
                 initPlayer,
                 Player::getTakenMoney,
                 player -> player.getTakenHealth() <= player.getMaxHealth(),
-                distance -> distance * 400 // TODO: Consider 0
+                distance -> distance
         );
          */
 
@@ -165,20 +163,20 @@ public class Main {
                 initPlayer,
                 Player::getTakenHealth,
                 player -> player.getTakenMoney() <= player.getMaxMoney(),
-                distance -> distance * -5 // Always taking a taxi.
+                distance -> distance
         );
          */
 
+        /*
         logicDataSource.aStar(
                 initPlayer,
                 player -> (player.getTime() / 3) + // Three Hours as a Max hours.
                         (player.getTakenHealth() / player.getMaxHealth()) +
                         (player.getTakenMoney() / player.getMaxMoney()),
                 player -> player.getTakenMoney() <= player.getMaxMoney() && player.getTakenHealth() <= player.getMaxHealth(),
-                distance -> ((distance / 160) / 3) +
-                        ((distance * 0) / initPlayer.getMaxHealth()) +
-                        ((distance * -5) / initPlayer.getMaxMoney())
+                distance -> distance
         );
+         */
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
