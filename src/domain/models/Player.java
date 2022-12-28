@@ -116,12 +116,12 @@ public class Player {
     public void takeBus(Road road, Bus bus) {
         if (previousTransmissionWay != TransmissionWay.Bus || !previousBus.getName().equals(bus.getName())) {
             takenMoney += bus.getMoneyCost();
+            time += station.getBusWaitingTime();
         }
         previousTransmissionWay = TransmissionWay.Bus;
         previousBus = bus;
         takenHealth += bus.getEffortCost(road.getDistance());
         time += bus.getTimeCost(road.getDistance());
-        time += station.getBusWaitingTime();
         station = road.getDestination();
     }
 
