@@ -48,10 +48,11 @@ public class LogicDataSource {
             for (Player child : children) {
                 if (!checkConstraints.fun(child)) continue;
                 double childHeuristic = calculateHeuristic.fun(distanceFromGoal(child));
-                AStarUsage newValue = new AStarUsage(calculateCost.fun(child), childHeuristic, child);
+                double childCost = calculateCost.fun(child);
+                AStarUsage newValue = new AStarUsage(childCost, childHeuristic, child);
                 if (visited.containsKey(child.hashCode())) {
                     double previousPossibleCost = visited.get(child.hashCode()).cost;
-                    if (calculateCost.fun(child) < previousPossibleCost) {
+                    if (childCost < previousPossibleCost) {
                         visited.put(child.hashCode(), newValue);
                         queue.add(newValue);
                     }
