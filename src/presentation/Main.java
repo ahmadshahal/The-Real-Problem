@@ -20,24 +20,22 @@ public class Main {
 
         out.println("Enter the number of stations:");
         int stationsCount = scanner.nextInt();
-        scanner.nextLine();
 
         ArrayList<Station> stations = new ArrayList<>();
         for (int i = 0; i < stationsCount; i++) {
             out.println("Station " + (i + 1));
 
             out.println("Enter station's name:");
-            String stationName = scanner.nextLine();
+            String stationName = scanner.next();
 
             out.println("Enter bus's expected waiting time in hours:");
             double busWaitingTime = scanner.nextDouble();
 
             out.println("Enter taxi's expected waiting time in hours:");
             double taxiWaitingTime = scanner.nextDouble();
-            scanner.nextLine();
 
             out.println("Is this the station you want to reach eventually? (Y/N)");
-            boolean finalStation = Objects.equals(scanner.nextLine(), "Y");
+            boolean finalStation = Objects.equals(scanner.next(), "Y");
 
             Station station = new Station(stationName, finalStation, taxiWaitingTime, busWaitingTime);
             stations.add(station);
@@ -45,50 +43,45 @@ public class Main {
 
         out.println("Enter the number of roads:");
         int roadsCount = scanner.nextInt();
-        scanner.nextLine();
 
         for (int i = 0; i < roadsCount; i++) {
             out.println("Road " + (i + 1));
 
             out.println("Enter the source station's name of this Road:");
-            String sourceStationName = scanner.nextLine();
+            String sourceStationName = scanner.next();
 
             out.println("Enter the destination station's name of this Road:");
-            String destinationStationName = scanner.nextLine();
+            String destinationStationName = scanner.next();
 
             out.println("Enter Road's distance in KM:");
             int roadDistance = scanner.nextInt();
-            scanner.nextLine();
 
             out.println("Does this road has taxis? (Y/N)");
-            boolean hasTaxis = Objects.equals(scanner.nextLine(), "Y");
+            boolean hasTaxis = Objects.equals(scanner.next(), "Y");
 
             Taxi taxi = null;
             if (hasTaxis) {
                 out.println("Enter taxi's speed (KM/H):");
                 double taxiSpeed = scanner.nextDouble();
-                scanner.nextLine();
 
                 taxi = new Taxi(taxiSpeed);
             }
 
             out.println("Does this road has busses? (Y/N)");
-            boolean hasBusses = Objects.equals(scanner.nextLine(), "Y");
+            boolean hasBusses = Objects.equals(scanner.next(), "Y");
 
             ArrayList<Bus> buss = null;
             if (hasBusses) {
                 out.println("Enter bus's speed (KM/H):");
                 double busSpeed = scanner.nextDouble();
-                scanner.nextLine();
 
                 out.println("Enter the number of buses in this road:");
                 int bussCount = scanner.nextInt();
-                scanner.nextLine();
 
                 ArrayList<Bus> bussTemp = new ArrayList<>();
                 for (int j = 0; j < bussCount; j++) {
                     out.println("Enter Bus's name:");
-                    String busName = scanner.nextLine();
+                    String busName = scanner.next();
                     bussTemp.add(new Bus(busName, busSpeed));
                 }
                 buss = bussTemp;
@@ -124,7 +117,7 @@ public class Main {
         }
 
         out.println("Enter initial station's name:");
-        String initStationName = scanner.nextLine();
+        String initStationName = scanner.next();
 
         Station initStation = null;
         for (Station station : stations) {
@@ -151,14 +144,12 @@ public class Main {
         );
          */
 
-        /*
         logicDataSource.aStar(
                 initPlayer,
                 Player::getTakenMoney,
                 player -> player.getTakenHealth() <= player.getMaxHealth(),
                 distance -> distance * -0.5 // Taking a Transmission Way that gives 0.5 for each KM.
         );
-         */
 
         /*
         logicDataSource.aStar(
@@ -169,6 +160,7 @@ public class Main {
         );
          */
 
+        /*
         logicDataSource.aStar(
                 initPlayer,
                 player -> (player.getTime() / 3) + // Three Hours as a Max hours.
@@ -176,9 +168,10 @@ public class Main {
                         (player.getTakenMoney() / player.getMaxMoney()),
                 player -> player.getTakenMoney() <= player.getMaxMoney() && player.getTakenHealth() <= player.getMaxHealth(),
                 distance -> ((distance / 160) / 3) +
-                        ((distance * 0) / initPlayer.getMaxHealth()) +
+                        ((distance * -0.5) / initPlayer.getMaxHealth()) +
                         ((distance * -5) / initPlayer.getMaxMoney())
         );
+         */
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
