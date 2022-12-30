@@ -105,11 +105,13 @@ public class Player {
     }
 
     public void takeTaxi(Road road) {
+        if(previousTransmissionWay == null || previousTransmissionWay != TransmissionWay.Taxi) {
+            time += station.getTaxiWaitingTime();
+        }
         previousTransmissionWay = TransmissionWay.Taxi;
         takenMoney += road.getTaxi().getMoneyCost(road.getDistance());
         takenHealth += road.getTaxi().getEffortCost(road.getDistance());
         time += road.getTaxi().getTimeCost(road.getDistance());
-        time += station.getTaxiWaitingTime();
         station = road.getDestination();
     }
 
