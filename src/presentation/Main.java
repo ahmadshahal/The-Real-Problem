@@ -156,7 +156,7 @@ public class Main {
                 initPlayer,
                 Player::getTakenMoney,
                 player -> player.getTakenHealth() <= player.getMaxHealth(),
-                distance -> distance * 400 // TODO: Consider 0
+                distance -> distance * -0.5 // Taking a Transmission Way that gives 0.5 for each KM.
         );
          */
 
