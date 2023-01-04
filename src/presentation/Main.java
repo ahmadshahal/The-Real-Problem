@@ -5,108 +5,130 @@ import domain.models.*;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Scanner;
-
-import static java.lang.System.*;
 
 public class Main {
 
     private static final LogicDataSource logicDataSource = new LogicDataSource();
-    private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        out.println("Enter the amount of money you have:");
-        int money = scanner.nextInt();
 
-        out.println("Enter the number of stations:");
-        int stationsCount = scanner.nextInt();
+        int money = 10000;
+
+        int stationsCount = 3;
 
         ArrayList<Station> stations = new ArrayList<>();
-        for (int i = 0; i < stationsCount; i++) {
-            out.println("Station " + (i + 1));
 
-            out.println("Enter station's name:");
-            String stationName = scanner.next();
+        String station1Name = "C";
+        double station1BusWaitingTime = 0.5;
+        double station1TaxiWaitingTime = 0.5;
+        boolean isStation1FinalStation = false;
+        Station station1 = new Station(station1Name, isStation1FinalStation, station1TaxiWaitingTime, station1BusWaitingTime);
+        stations.add(station1);
 
-            out.println("Enter bus's expected waiting time in hours:");
-            double busWaitingTime = scanner.nextDouble();
+        String station2Name = "M";
+        double station2BusWaitingTime = 0.5;
+        double station2TaxiWaitingTime = 0.5;
+        boolean isStation2FinalStation = true;
+        Station station2 = new Station(station2Name, isStation2FinalStation, station2TaxiWaitingTime, station2BusWaitingTime);
+        stations.add(station2);
 
-            out.println("Enter taxi's expected waiting time in hours:");
-            double taxiWaitingTime = scanner.nextDouble();
+        String station3Name = "P";
+        double station3BusWaitingTime = 0.5;
+        double station3TaxiWaitingTime = 0.5;
+        boolean isStation3FinalStation = false;
+        Station station3 = new Station(station3Name, isStation3FinalStation, station3TaxiWaitingTime, station3BusWaitingTime);
+        stations.add(station3);
 
-            out.println("Is this the station you want to reach eventually? (Y/N)");
-            boolean finalStation = Objects.equals(scanner.next(), "Y");
+        int roadsCount = 3;
 
-            Station station = new Station(stationName, finalStation, taxiWaitingTime, busWaitingTime);
-            stations.add(station);
+        // ============================================
+        // Road1:
+        String road1SourceStationName = "C";
+        String road1DestinationStationName = "M";
+        int road1Distance = 40;
+        boolean road1HasTaxis = true;
+        double road1TaxiSpeed = 80;
+        Taxi road1Taxi = new Taxi(road1TaxiSpeed);
+
+        boolean road1HasBusses = false;
+        ArrayList<Bus> road1Buss = null;
+
+        Station road1SourceStation = null;
+        Station road1DestinationStation = null;
+        for (Station station : stations) {
+            if (Objects.equals(station.getStationName(), road1SourceStationName)) {
+                road1SourceStation = station;
+            }
+            if (Objects.equals(station.getStationName(), road1DestinationStationName)) {
+                road1DestinationStation = station;
+            }
         }
+        Road outRoad1 = new Road(road1Distance, road1Buss, road1Taxi, road1DestinationStation);
+        Road inRoad1 = new Road(road1Distance, road1Buss, road1Taxi, road1SourceStation);
+        road1DestinationStation.getInRoads().add(inRoad1);
+        road1SourceStation.getOutRoads().add(outRoad1);
 
-        out.println("Enter the number of roads:");
-        int roadsCount = scanner.nextInt();
+        // ============================================
+        // Road2:
+        String road2SourceStationName = "C";
+        String road2DestinationStationName = "P";
+        int road2Distance = 15;
+        boolean road2HasTaxis = true;
+        double road2TaxiSpeed = 80;
+        Taxi road2Taxi = new Taxi(road2TaxiSpeed);
 
-        for (int i = 0; i < roadsCount; i++) {
-            out.println("Road " + (i + 1));
+        boolean road2HasBusses = true;
+        ArrayList<Bus> road2Buss = new ArrayList<>();
+        double road2BusSpeed = 60;
+        int road2BussCount = 1;
+        Bus road2Bus1 = new Bus("Muhajreen", road2BusSpeed);
+        road2Buss.add(road2Bus1);
 
-            out.println("Enter the source station's name of this Road:");
-            String sourceStationName = scanner.next();
-
-            out.println("Enter the destination station's name of this Road:");
-            String destinationStationName = scanner.next();
-
-            out.println("Enter Road's distance in KM:");
-            int roadDistance = scanner.nextInt();
-
-            out.println("Does this road has taxis? (Y/N)");
-            boolean hasTaxis = Objects.equals(scanner.next(), "Y");
-
-            Taxi taxi = null;
-            if (hasTaxis) {
-                out.println("Enter taxi's speed (KM/H):");
-                double taxiSpeed = scanner.nextDouble();
-
-                taxi = new Taxi(taxiSpeed);
+        Station road2SourceStation = null;
+        Station road2DestinationStation = null;
+        for (Station station : stations) {
+            if (Objects.equals(station.getStationName(), road2SourceStationName)) {
+                road2SourceStation = station;
             }
-
-            out.println("Does this road has busses? (Y/N)");
-            boolean hasBusses = Objects.equals(scanner.next(), "Y");
-
-            ArrayList<Bus> buss = null;
-            if (hasBusses) {
-                out.println("Enter bus's speed (KM/H):");
-                double busSpeed = scanner.nextDouble();
-
-                out.println("Enter the number of buses in this road:");
-                int bussCount = scanner.nextInt();
-
-                ArrayList<Bus> bussTemp = new ArrayList<>();
-                for (int j = 0; j < bussCount; j++) {
-                    out.println("Enter Bus's name:");
-                    String busName = scanner.next();
-                    bussTemp.add(new Bus(busName, busSpeed));
-                }
-                buss = bussTemp;
+            if (Objects.equals(station.getStationName(), road2DestinationStationName)) {
+                road2DestinationStation = station;
             }
-
-            Station sourceStation = null;
-            Station destinationStation = null;
-
-            for (Station station : stations) {
-                if (Objects.equals(station.getStationName(), sourceStationName)) {
-                    sourceStation = station;
-                }
-                if (Objects.equals(station.getStationName(), destinationStationName)) {
-                    destinationStation = station;
-                }
-            }
-            assert destinationStation != null;
-            assert sourceStation != null;
-
-            Road outRoad = new Road(roadDistance, buss, taxi, destinationStation);
-            Road inRoad = new Road(roadDistance, buss, taxi, sourceStation);
-
-            destinationStation.getInRoads().add(inRoad);
-            sourceStation.getOutRoads().add(outRoad);
         }
+        Road outRoad2 = new Road(road2Distance, road2Buss, road2Taxi, road2DestinationStation);
+        Road inRoad2 = new Road(road2Distance, road2Buss, road2Taxi, road2SourceStation);
+        road2DestinationStation.getInRoads().add(inRoad2);
+        road2SourceStation.getOutRoads().add(outRoad2);
+
+        // ============================================
+        // Road3:
+        String road3SourceStationName = "P";
+        String road3DestinationStationName = "M";
+        int road3Distance = 15;
+        boolean road3HasTaxis = true;
+        double road3TaxiSpeed = 80;
+        Taxi road3Taxi = new Taxi(road3TaxiSpeed);
+
+        boolean road3HasBusses = true;
+        ArrayList<Bus> road3Buss = new ArrayList<>();
+        double road3BusSpeed = 60;
+        int road3BussCount = 1;
+        Bus road3Bus1 = new Bus("Mashrou", road3BusSpeed);
+        road3Buss.add(road3Bus1);
+
+        Station road3SourceStation = null;
+        Station road3DestinationStation = null;
+        for (Station station : stations) {
+            if (Objects.equals(station.getStationName(), road3SourceStationName)) {
+                road3SourceStation = station;
+            }
+            if (Objects.equals(station.getStationName(), road3DestinationStationName)) {
+                road3DestinationStation = station;
+            }
+        }
+        Road outRoad3 = new Road(road3Distance, road3Buss, road3Taxi, road3DestinationStation);
+        Road inRoad3 = new Road(road3Distance, road3Buss, road3Taxi, road3SourceStation);
+        road3DestinationStation.getInRoads().add(inRoad3);
+        road3SourceStation.getOutRoads().add(outRoad3);
 
         Station finalStation = null;
         for (Station station : stations) {
@@ -116,8 +138,7 @@ public class Main {
             }
         }
 
-        out.println("Enter initial station's name:");
-        String initStationName = scanner.next();
+        String initStationName = "C";
 
         Station initStation = null;
         for (Station station : stations) {
@@ -127,12 +148,10 @@ public class Main {
             }
         }
 
-        assert initStation != null;
         Player initPlayer = new Player(initStation, money);
 
         long startTime = System.currentTimeMillis();
 
-        assert finalStation != null;
         logicDataSource.initHeuristicByDijkstra(finalStation);
 
         /*
@@ -144,12 +163,14 @@ public class Main {
         );
          */
 
+        /*
         logicDataSource.aStar(
                 initPlayer,
                 Player::getTakenMoney,
                 player -> player.getTakenHealth() <= player.getMaxHealth(),
                 distance -> distance * -0.5 // Taking a Transmission Way that gives 0.5 for each KM.
         );
+         */
 
         /*
         logicDataSource.aStar(
@@ -160,10 +181,9 @@ public class Main {
         );
          */
 
-        /*
         logicDataSource.aStar(
                 initPlayer,
-                player -> (player.getTime() / 3) + // Three Hours as a Max hours.
+                player -> (player.getTime() / 3) + // Three Hours as Max hours.
                         (player.getTakenHealth() / player.getMaxHealth()) +
                         (player.getTakenMoney() / player.getMaxMoney()),
                 player -> player.getTakenMoney() <= player.getMaxMoney() && player.getTakenHealth() <= player.getMaxHealth(),
@@ -171,7 +191,6 @@ public class Main {
                         ((distance * -0.5) / initPlayer.getMaxHealth()) +
                         ((distance * -5) / initPlayer.getMaxMoney())
         );
-         */
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
